@@ -1,2 +1,3 @@
-# MedSRGAN-Pytorch
-This repo is an implementation of the article MedSRGAN: medical images super-resolution using generative adversarial networks using PyTorchframework.
+# MedSRGAN-Pytorch-Echocardiography
+
+This repo is an implementation of the article MedSRGAN on the Echocardiography dataset, taken from Tehran Heart Center.
