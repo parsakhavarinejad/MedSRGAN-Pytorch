@@ -1,6 +1,9 @@
 
 # MedSRGAN: Medical Images Super-Resolution Using Generative Adversarial Networks
 
+### The repo's structure isn't complete and it is in Progress. The notebooks works well though, On some dataset.
+
+
 This repository contains a PyTorch implementation of **MedSRGAN**, a novel approach for enhancing the resolution of medical images using Generative Adversarial Networks (GANs). MedSRGAN is designed specifically to improve the quality of medical images, such as CT scans and MRIs, by reconstructing high-resolution images from their low-resolution counterparts. The model aims to help medical professionals make more accurate diagnoses by providing clearer and more detailed images.
 
 ## Table of Contents
