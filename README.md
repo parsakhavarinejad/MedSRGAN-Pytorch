@@ -36,7 +36,7 @@ Super-resolution of medical images is a critical task for enhancing image qualit
 Clone this repository and install the required dependencies:
 
 ```bash
-git clone https://github.com/yourusername/MedSRGAN.git
+git clone https://github.com/parsakhavarinejad/MedSRGAN-Pytorch.git
 cd MedSRGAN
 pip install -r requirements.txt
 ```
@@ -47,11 +47,12 @@ Make sure you have PyTorch installed. You can follow the instructions from the [
 
 ### 1. Pre-trained Model Inference
 
-To use a pre-trained model for super-resolution:
+<!-- To use a pre-trained model for super-resolution:
 
 ```bash
 python infer.py --input_dir path/to/low_res_images --output_dir path/to/save_results --model_path path/to/pretrained/model
-```
+``` -->
+Not yet developed
 
 ### 2. Training from Scratch
 
