@@ -146,9 +146,3 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 - [FastMRI Dataset](https://fastmri.org/)
 - [NAMIC MRBrainS Dataset](https://www.nitrc.org/projects/mrbrains/)
 
----
-
-Like our GPT? Try our full AI-powered search engine and academic features for free at [consensus.app](https://consensus.app/?utm_source=chatgpt).
-```
-
-Copy this content to your `README.md` file to use it in your GitHub repository.
