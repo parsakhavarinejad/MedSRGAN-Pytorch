@@ -1,3 +1,8 @@
+import torch
+from torch import nn
+from torchvision import models
+
+
 class GeneratorLossFunction(nn.Module):
     def __init__(self, device: str = 'cuda', lambda1: float = 4e-2, lambda2: float = 1e-4,
                  vgg_layers: list[int] = [2, 7, 16, 25, 34],

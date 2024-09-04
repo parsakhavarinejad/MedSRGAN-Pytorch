@@ -1,4 +1,6 @@
+from PIL.Image import Image
 from torch.utils.data import DataLoader, Dataset
+
 
 class CustomDataset(Dataset):
 

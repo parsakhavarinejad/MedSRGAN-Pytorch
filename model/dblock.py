@@ -1,3 +1,6 @@
+from torch import nn
+
+
 class DBlock(nn.Module):
 
     def __init__(self, input_shape: int = 64,

@@ -1,3 +1,9 @@
+import torch
+from torch import nn
+
+from model.dblock import DBlock
+
+
 class Discriminator(nn.Module):
 
     def __init__(self):

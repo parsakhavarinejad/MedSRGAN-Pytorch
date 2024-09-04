@@ -1,3 +1,8 @@
+from torch import nn
+
+from model.rwmab import RWMAB
+
+
 class ShortResidualConnection(nn.Module):
     def __init__(self, input_shape: int = 64) -> None:
         super().__init__()

@@ -1,3 +1,8 @@
+from torch import nn
+
+from model.short_residual import ShortResidualConnection
+
+
 class Generator(nn.Module):
 
     def __init__(self):
