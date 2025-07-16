@@ -2,6 +2,7 @@
 
 This project implements a Medical Super-Resolution Generative Adversarial Network (MEDSRGAN) for enhancing the resolution of CT scan images. The architecture is inspired by SRGAN and RCAN, incorporating attention mechanisms and residual learning for improved performance in medical image super-resolution.
 
+[Paper Link](https://paperswithcode.com/paper/medsrgan-medical-images-super-resolution)
 ## Project Structure
 
 The project is organized into a modular and professional structure to facilitate development, testing, and deployment.
@@ -61,10 +62,8 @@ medsrgan/
 
 3.  **Install dependencies:**
     ```bash
-    pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 # For CUDA 11.8, adjust for your CUDA version or use `cpu`
-    pip install pandas numpy matplotlib scikit-learn pillow tqdm torchmetrics
+    pip install -r requirements.txt
     ```
-    *Note: Replace `cu118` with your specific CUDA version (e.g., `cu121`) or `cpu` if you don't have a GPU.*
 
 ## Data Preparation
 
