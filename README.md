@@ -3,6 +3,7 @@
 This project implements a Medical Super-Resolution Generative Adversarial Network (MEDSRGAN) for enhancing the resolution of CT scan images. The architecture is inspired by SRGAN and RCAN, incorporating attention mechanisms and residual learning for improved performance in medical image super-resolution.
 
 [Paper Link](https://paperswithcode.com/paper/medsrgan-medical-images-super-resolution)
+
 [Kaggle](https://www.kaggle.com/code/parsakh/medsrgan-ct-scan)
 ## Project Structure
 
