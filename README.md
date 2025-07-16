@@ -1,148 +1,118 @@
+# MEDSRGAN - CT Scan Super-Resolution
 
-# MedSRGAN: Medical Images Super-Resolution Using Generative Adversarial Networks
+This project implements a Medical Super-Resolution Generative Adversarial Network (MEDSRGAN) for enhancing the resolution of CT scan images. The architecture is inspired by SRGAN and RCAN, incorporating attention mechanisms and residual learning for improved performance in medical image super-resolution.
 
-### The repo's structure isn't complete and it is in Progress. The notebooks works well though, On some dataset.
+## Project Structure
 
+The project is organized into a modular and professional structure to facilitate development, testing, and deployment.
 
-This repository contains a PyTorch implementation of **MedSRGAN**, a novel approach for enhancing the resolution of medical images using Generative Adversarial Networks (GANs). MedSRGAN is designed specifically to improve the quality of medical images, such as CT scans and MRIs, by reconstructing high-resolution images from their low-resolution counterparts. The model aims to help medical professionals make more accurate diagnoses by providing clearer and more detailed images.
-
-## Table of Contents
-
-- [Background](#background)
-- [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Dataset](#dataset)
-- [Training](#training)
-- [Evaluation](#evaluation)
-- [Results](#results)
-- [Contributing](#contributing)
-- [License](#license)
-- [References](#references)
-
-## Background
-
-Super-resolution of medical images is a critical task for enhancing image quality, which is essential for accurate diagnosis and treatment planning. Traditional methods often fail to capture fine details and can introduce artifacts that compromise diagnostic utility. **MedSRGAN** leverages GANs to provide a powerful and effective solution to this problem by:
-1. Utilizing a generator network to produce high-resolution images.
-2. Training a discriminator network to distinguish between high-resolution and low-resolution images, thus encouraging the generator to produce more realistic results.
+```
+medsrgan/
+├── data/
+│   └── custom_dataset.py       # Defines the CustomDataset for loading LR and HR image pairs.
+├── models/
+│   ├── __init__.py             # Makes 'models' a Python package.
+│   ├── discriminator.py        # Implements the Discriminator network.
+│   └── generator.py            # Implements the Generator network (with RWMAB and SRC blocks).
+├── losses/
+│   ├── __init__.py             # Makes 'losses' a Python package.
+│   ├── discriminator_loss.py   # Defines the Discriminator's loss function.
+│   └── generator_loss.py       # Defines the Generator's perceptual loss function.
+├── utils/
+│   ├── __init__.py             # Makes 'utils' a Python package.
+│   ├── early_stopping.py       # Implements early stopping logic.
+│   ├── transforms.py           # Defines image transformations (LR/HR, noise).
+│   └── visualize.py            # Utility for plotting training performance.
+├── trainer/
+│   └── trainer.py              # Encapsulates the training and evaluation loop.
+├── main.py                     # Main script to run the training process.
+└── README.md                   # Project README file.
+```
 
 ## Features
 
-- **GAN-based Model**: Employs a GAN framework to enhance the resolution of medical images effectively.
-- **Customizable Network**: Easily adjustable network architecture for various datasets and requirements.
-- **Training and Evaluation Scripts**: End-to-end training and evaluation scripts to facilitate reproducibility.
-- **Support for Multiple Modalities**: Adaptable to different types of medical imaging modalities (e.g., MRI, CT).
-- **Pre-trained Models**: Available pre-trained models for quick testing and validation.
+-   **Modular Design**: Code is organized into logical modules (data, models, losses, utils, trainer) for better readability, maintainability, and reusability.
+-   **Generator Network**:
+    -   Based on Residual Whole Map Attention Blocks (RWMAB) and Short Residual Connections (SRC).
+    -   Utilizes PixelShuffle for efficient upsampling.
+-   **Discriminator Network**:
+    -   A patch-based discriminator that classifies image patches as real or fake.
+    -   Includes intermediate feature extraction for perceptual loss.
+-   **Perceptual Loss**:
+    -   Generator loss combines content loss (VGG-based perceptual loss and L1 loss), adversarial loss, and adversarial feature matching loss.
+-   **Early Stopping**: Prevents overfitting by monitoring a validation metric (e.g., PSNR) and stopping training if no improvement is observed for a specified number of epochs.
+-   **Model Saving**: Automatically saves generator and discriminator checkpoints periodically and the best model based on validation performance.
+-   **Performance Visualization**: Plots training losses (Generator and Discriminator), discriminator scores (real vs. fake), and image quality metrics (PSNR, SSIM).
+-   **Sample Image Generation**: Saves sample super-resolved images during training to visually track progress.
 
-## Installation
+## Setup and Installation
 
-Clone this repository and install the required dependencies:
+1.  **Clone the repository (if applicable):**
+    ```bash
+    # git clone <repository_url>
+    # cd medsrgan
+    ```
 
-```bash
-git clone https://github.com/parsakhavarinejad/MedSRGAN-Pytorch.git
-cd MedSRGAN
-pip install -r requirements.txt
-```
+2.  **Create a virtual environment (recommended):**
+    ```bash
+    python -m venv venv
+    source venv/bin/activate  # On Windows: `venv\Scripts\activate`
+    ```
 
-Make sure you have PyTorch installed. You can follow the instructions from the [PyTorch official website](https://pytorch.org/get-started/locally/).
+3.  **Install dependencies:**
+    ```bash
+    pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 # For CUDA 11.8, adjust for your CUDA version or use `cpu`
+    pip install pandas numpy matplotlib scikit-learn pillow tqdm torchmetrics
+    ```
+    *Note: Replace `cu118` with your specific CUDA version (e.g., `cu121`) or `cpu` if you don't have a GPU.*
+
+## Data Preparation
+
+The `CustomDataset` expects image paths in a pandas DataFrame.
+The original notebook used data from `/kaggle/input/chest-ctscan-images/Data/`.
+If you are running this code locally, ensure your data is structured similarly or modify `main.py` to point to your dataset location.
+For initial testing without actual data, the `CustomDataset` includes a `use_dummy=True` option, which generates placeholder images.
 
 ## Usage
 
-### 1. Pre-trained Model Inference
-
-<!-- To use a pre-trained model for super-resolution:
+To train the MEDSRGAN model, run the `main.py` script:
 
 ```bash
-python infer.py --input_dir path/to/low_res_images --output_dir path/to/save_results --model_path path/to/pretrained/model
-``` -->
-Not yet developed
-
-### 2. Training from Scratch
-
-To train the model from scratch:
-
-```bash
-python train.py --config configs/train_config.yaml
+python main.py
 ```
 
-You can modify the `train_config.yaml` file to set the training parameters, such as learning rate, batch size, and number of epochs.
+## Training Configuration
 
-## Dataset
+Adjust training parameters in `main.py`:
 
-To train the MedSRGAN model, you will need a dataset of paired low-resolution and high-resolution medical images. You can use any publicly available datasets, such as:
+-   `image_size`: Target resolution for HR images.
+-   `batch_size`: Number of images per batch.
+-   `learning_rate`: Initial learning rate for optimizers.
+-   `epochs`: Total number of training epochs.
+-   `patience`: Number of epochs for early stopping.
+-   `min_delta`: Minimum change in validation metric to qualify as an improvement for early stopping.
+-   `device`: 'cuda' for GPU training (recommended) or 'cpu'.
+-   `model_logs_dir`: Directory to save model checkpoints.
+-   `outputs_dir`: Directory to save generated sample images.
 
-- [FastMRI](https://fastmri.org/)
-- [NAMIC MRBrainS](https://www.nitrc.org/projects/mrbrains/)
+## Output
 
-Make sure to organize your dataset as follows:
-
-```
-/data
-    /train
-        /LR  # Low-resolution images
-        /HR  # High-resolution images
-    /val
-        /LR
-        /HR
-```
-
-Update the dataset paths in the configuration file (`configs/train_config.yaml`).
-
-## Training
-
-To train the model:
-
-1. Prepare your dataset.
-2. Adjust the training parameters in `configs/train_config.yaml`.
-3. Run the training script:
-
-```bash
-python train.py --config configs/train_config.yaml
-```
-
-During training, the model checkpoints and logs will be saved in the `checkpoints` and `logs` directories, respectively.
+During training, the script will:
+-   Print epoch-wise training progress (losses, scores, metrics).
+-   Save sample super-resolved images to `output_images/MonthXX_DayYY_HourZZ_MinAA/`.
+-   Save model checkpoints (Generator and Discriminator state_dicts) to `model_logs/MonthXX_DayYY_HourZZ_MinAA/`.
+-   Save the best model based on validation PSNR to `model_logs/MonthXX_DayYY_HourZZ_MinAA/best_model.pth`.
+-   Generate `performance_plots.png` in the root directory, showing training curves.
 
 ## Evaluation
 
-To evaluate the trained model:
+The `Trainer` class includes an `evaluate` method that calculates PSNR and SSIM on the test dataset. This is called periodically during training and can be called independently after training.
 
-```bash
-python evaluate.py --model_path path/to/trained/model --dataset_dir path/to/evaluation/dataset
-```
+## Future Improvements
 
-The evaluation script will compute common metrics like PSNR (Peak Signal-to-Noise Ratio) and SSIM (Structural Similarity Index) to assess the model's performance.
-
-## Results
-
-| Metric     | Value (Dataset 1) | Value (Dataset 2) |
-|------------|------------------|-------------------|
-| PSNR (dB)  | XX.XX            | XX.XX             |
-| SSIM       | XX.XX            | XX.XX             |
-
-Qualitative results:
-
-![Sample Results](assets/sample_results.png)
-
-## Contributing
-
-We welcome contributions to improve this project. Please submit a pull request or open an issue to discuss your ideas.
-
-### How to Contribute
-
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature-branch`).
-3. Make your changes.
-4. Push to the branch (`git push origin feature-branch`).
-5. Create a pull request.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
-## References
-
-- Original Paper: *MedSRGAN: Medical Images Super-Resolution Using Generative Adversarial Networks*.
-- [PyTorch Documentation](https://pytorch.org/docs/stable/index.html)
-- [FastMRI Dataset](https://fastmri.org/)
-- [NAMIC MRBrainS Dataset](https://www.nitrc.org/projects/mrbrains/)
-
+-   **Command-line Arguments**: Implement `argparse` for easier configuration of training parameters.
+-   **Logging**: Integrate a more robust logging system (e.g., TensorBoard, MLflow) for better tracking of experiments.
+-   **Configuration Files**: Use YAML or JSON files for managing configurations.
+-   **Data Augmentation**: Explore more advanced data augmentation techniques.
+-   **Hyperparameter Tuning**: Implement tools for hyperparameter optimization.
+-   **Deployment**: Develop a simple inference script or API for using the trained model.
