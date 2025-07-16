@@ -3,6 +3,7 @@
 This project implements a Medical Super-Resolution Generative Adversarial Network (MEDSRGAN) for enhancing the resolution of CT scan images. The architecture is inspired by SRGAN and RCAN, incorporating attention mechanisms and residual learning for improved performance in medical image super-resolution.
 
 [Paper Link](https://paperswithcode.com/paper/medsrgan-medical-images-super-resolution)
+[Kaggle](https://www.kaggle.com/code/parsakh/medsrgan-ct-scan)
 ## Project Structure
 
 The project is organized into a modular and professional structure to facilitate development, testing, and deployment.
@@ -11,6 +12,7 @@ The project is organized into a modular and professional structure to facilitate
 medsrgan/
 ├── data/
 │   └── custom_dataset.py       # Defines the CustomDataset for loading LR and HR image pairs.
+├── dataset/                    # Folder to put the dataset inside
 ├── models/
 │   ├── __init__.py             # Makes 'models' a Python package.
 │   ├── discriminator.py        # Implements the Discriminator network.
@@ -68,7 +70,7 @@ medsrgan/
 ## Data Preparation
 
 The `CustomDataset` expects image paths in a pandas DataFrame.
-The original notebook used data from `/kaggle/input/chest-ctscan-images/Data/`.
+The original notebook used data from `/kaggle/input/chest-ctscan-images/Data/`. But here it is necessary to put the data inside the dataset folder.
 If you are running this code locally, ensure your data is structured similarly or modify `main.py` to point to your dataset location.
 For initial testing without actual data, the `CustomDataset` includes a `use_dummy=True` option, which generates placeholder images.
 
