@@ -1,7 +1,6 @@
 # models/generator.py
 import torch
 import torch.nn as nn
-
 class RWMAB(nn.Module):
     """
     Residual Whole Map Attention Block (RWMAB).

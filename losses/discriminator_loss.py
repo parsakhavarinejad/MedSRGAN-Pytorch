@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-
 class DiscriminatorLossFunction(nn.Module):
     """
     Calculates the total loss for the Discriminator.
@@ -30,15 +29,10 @@ class DiscriminatorLossFunction(nn.Module):
             torch.Tensor: The total discriminator loss.
         """
         # Loss for real images: Discriminator should predict 1 for real images
-        # We use F.binary_cross_entropy_with_logits for numerical stability
-        # if the input `hr_preds` are raw logits (before sigmoid).
-        # However, the Discriminator's `final` layer already applies Sigmoid,
-        # so we should use F.binary_cross_entropy directly.
-        # Let's assume `hr_preds` and `sr_preds` are already sigmoid outputs (probabilities).
-        real_loss = F.binary_cross_entropy(hr_preds, torch.ones_like(hr_preds).to(self.device))
+        real_loss = F.binary_cross_entropy_with_logits(hr_preds, torch.ones_like(hr_preds).to(self.device))
 
         # Loss for fake images: Discriminator should predict 0 for fake images
-        fake_loss = F.binary_cross_entropy(sr_preds, torch.zeros_like(sr_preds).to(self.device))
+        fake_loss = F.binary_cross_entropy_with_logits(sr_preds, torch.zeros_like(sr_preds).to(self.device))
 
         # Total discriminator loss is the sum of real and fake losses
         total_loss = real_loss + fake_loss

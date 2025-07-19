@@ -50,9 +50,6 @@ class Discriminator(nn.Module):
         Initializes the Discriminator network.
         """
         super().__init__()
-
-        # Blocks for processing super-resolved (SR) or high-resolution (HR) images
-        # These blocks process the input 'x' (which will be SR or HR)
         self.block_1_sr = nn.Sequential(
             DBlock(3, 64, stride=1, bn=False),  # Initial block, no BN on first layer
             DBlock(64, 64, stride=2)            # Downsampling
@@ -62,8 +59,6 @@ class Discriminator(nn.Module):
             DBlock(128, 128, stride=2)          # Downsampling
         )
 
-        # Blocks for processing low-resolution (LR) images
-        # These blocks process the input 'y' (which will be LR)
         self.block_1_lr = nn.Sequential(
             DBlock(3, 64, stride=1, bn=False),  # No BN on first layer
             DBlock(64, 128, stride=1, bn=True)  # No downsampling here, just feature extraction
