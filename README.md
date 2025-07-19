@@ -12,25 +12,27 @@ The project is organized into a modular and professional structure to facilitate
 ```
 medsrgan/
 ├── data/
-│   └── custom_dataset.py       # Defines the CustomDataset for loading LR and HR image pairs.
-├── dataset/                    # Folder to put the dataset inside
+│   ├── custom_dataset.py       # Defines CustomDataset for loading LR and HR image pairs.
+│   └── dataset/                # Directory for 'train' and 'test' folders containing PNG image files.
+├── config/
+│   └── config.yml              # Centralized configuration file.
 ├── models/
-│   ├── __init__.py             # Makes 'models' a Python package.
+│   ├── init.py             # Initializes the 'models' Python package.
 │   ├── discriminator.py        # Implements the Discriminator network.
-│   └── generator.py            # Implements the Generator network (with RWMAB and SRC blocks).
+│   └── generator.py            # Implements the Generator network (featuring RWMAB and SRC blocks).
 ├── losses/
-│   ├── __init__.py             # Makes 'losses' a Python package.
+│   ├── init.py             # Initializes the 'losses' Python package.
 │   ├── discriminator_loss.py   # Defines the Discriminator's loss function.
 │   └── generator_loss.py       # Defines the Generator's perceptual loss function.
 ├── utils/
-│   ├── __init__.py             # Makes 'utils' a Python package.
+│   ├── init.py             # Initializes the 'utils' Python package.
 │   ├── early_stopping.py       # Implements early stopping logic.
 │   ├── transforms.py           # Defines image transformations (LR/HR, noise).
 │   └── visualize.py            # Utility for plotting training performance.
 ├── trainer/
 │   └── trainer.py              # Encapsulates the training and evaluation loop.
-├── main.py                     # Main script to run the training process.
-└── README.md                   # Project README file.
+├── main.py                     # Main script to initiate the training process.
+└── README.md                   # Project README file.                 # Project README file.
 ```
 
 ## Features
@@ -77,7 +79,7 @@ For initial testing without actual data, the `CustomDataset` includes a `use_dum
 
 ## Usage
 
-To train the MEDSRGAN model, run the `main.py` script:
+Before running, adjust the desired settings in `config/config.yml`. To train the MEDSRGAN model, execute the `main.py` script:
 
 ```bash
 python main.py

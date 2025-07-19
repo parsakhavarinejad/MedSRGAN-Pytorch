@@ -1,0 +1,46 @@
+# Configuration file for the SRGAN training script
+
+# --- Data Configuration ---
+data:
+  # Paths to the dataset. The script will combine these.
+  train_path: 'MedSRGAN-Pytorch/data/dataset/train/*.png'
+  test_path: 'MedSRGAN-Pytorch/data/dataset/test/*.png'
+  image_size: 256
+  # Number of worker processes for the DataLoader
+  num_workers: 4
+  # Set to true to use dummy data for local testing without the full dataset
+  use_dummy_data: false
+  dummy_data_size: 1000
+  train_split_ratio: 0.75 # 75% for training, 25% for testing
+
+# --- Training Configuration ---
+training:
+  epochs: 400
+  batch_size: 8
+  # Device selection: 'auto' will use CUDA if available, otherwise CPU.
+  # Can be manually set to 'cuda' or 'cpu'.
+  device: 'auto'
+
+# --- Optimizer Configuration ---
+optimizer:
+  learning_rate: 0.00001 # This is 1e-5
+  # Beta parameters for the Adam optimizer
+  betas: [0.95, 0.999]
+
+# --- Early Stopping Configuration ---
+early_stopping:
+  # Number of epochs to wait for improvement before stopping
+  patience: 10
+  # Minimum change in the monitored quantity to qualify as an improvement
+  min_delta: 0.001
+
+# --- Model & Output Saving Configuration ---
+saving:
+  # Directory to save trained model checkpoints
+  model_save_dir: 'saved_models'
+  # Filename for the best model saved by early stopping
+  best_model_filename: 'best_model.pth'
+  # Directory to save generated sample images during training
+  sample_save_dir: 'saved_samples'
+  # Save a model checkpoint every N epochs
+  save_interval: 5
