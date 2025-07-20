@@ -90,12 +90,14 @@ class Trainer(nn.Module):
         disc_path = os.path.join(self.model_save_dir, f'discriminator_epoch_{epoch:04d}.pth')
 
         if empty_dir:
+            file_to_keep = "best_model.pth"
             for item in os.listdir(self.model_save_dir):
                 item_path = os.path.join(self.model_save_dir, item)
-                if os.path.isfile(item_path) or os.path.islink(item_path):
-                    os.remove(item_path)
-                elif os.path.isdir(item_path):
-                    shutil.rmtree(item_path)
+                if item != file_to_keep:
+                    if os.path.isfile(item_path) or os.path.islink(item_path):
+                        os.remove(item_path)
+                    elif os.path.isdir(item_path):
+                        shutil.rmtree(item_path)
             
         torch.save(self.generator.state_dict(), gen_path)
         torch.save(self.discriminator.state_dict(), disc_path)
