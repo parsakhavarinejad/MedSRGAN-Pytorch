@@ -1,61 +1,49 @@
+import torch
 import matplotlib.pyplot as plt
-import numpy as np
+import os
 
-def visualize_results(loss_g: list, loss_d: list, real_scores: list,
-                      fake_scores: list, psnr_scores: list, ssim_scores: list,
-                      save_path: str = 'performance_plots.png'):
-    """
-    Visualizes the training performance metrics: Generator Loss, Discriminator Loss,
-    Real vs Fake Scores, PSNR, and SSIM.
+def visualize_epoch_results(training_results: dict, save_path: str):
+    """Visualizes the training performance metrics."""
+    fig, axs = plt.subplots(4, 1, figsize=(12, 20))
 
-    Args:
-        loss_g (list): List of generator losses per epoch.
-        loss_d (list): List of discriminator losses per epoch.
-        real_scores (list): List of discriminator's real scores per epoch.
-        fake_scores (list): List of discriminator's fake scores per epoch.
-        psnr_scores (list): List of PSNR scores per epoch.
-        ssim_scores (list): List of SSIM scores per epoch.
-        save_path (str): Path to save the generated plot.
-    """
-    fig, axs = plt.subplots(3, 1, figsize=(10, 15))
-
-    # Convert scores to numpy arrays if they are still tensors
-    # Ensure they are detached from the graph and on CPU before converting to numpy
-    real_scores_np = [score.item() if isinstance(score, torch.Tensor) else score for score in real_scores]
-    fake_scores_np = [score.item() if isinstance(score, torch.Tensor) else score for score in fake_scores]
-    psnr_scores_np = [score.item() if isinstance(score, torch.Tensor) else score for score in psnr_scores]
-    ssim_scores_np = [score.item() if isinstance(score, torch.Tensor) else score for score in ssim_scores]
-
+    epochs = range(1, len(training_results['loss_g']) + 1)
 
     # Plot Losses
-    axs[0].plot(loss_g, label='Generator Loss')
-    axs[0].plot(loss_d, label='Discriminator Loss')
-    axs[0].set_title('Losses over Training')
-    axs[0].set_xlabel('Batch Iterations') # Changed to batch iterations as losses are appended per batch
-    axs[0].set_ylabel('Loss Value')
+    axs[0].plot(epochs, training_results['loss_g'], 'b-o', label='Generator Loss')
+    axs[0].plot(epochs, training_results['loss_d'], 'r-o', label='Discriminator Loss')
+    axs[0].set_title('Training Losses')
+    axs[0].set_xlabel('Epochs')
+    axs[0].set_ylabel('Loss')
     axs[0].legend()
     axs[0].grid(True)
 
     # Plot Real vs Fake Scores
-    axs[1].plot(real_scores_np, label='Real Scores')
-    axs[1].plot(fake_scores_np, label='Fake Scores')
-    axs[1].set_title('Discriminator Real vs Fake Scores')
-    axs[1].set_xlabel('Batch Iterations')
-    axs[1].set_ylabel('Score')
+    axs[1].plot(epochs, training_results['real_scores'], 'g-o', label='Real Scores (D)')
+    axs[1].plot(epochs, training_results['fake_scores'], 'm-o', label='Fake Scores (D)')
+    axs[1].set_title('Discriminator Scores')
+    axs[1].set_xlabel('Epochs')
+    axs[1].set_ylabel('Probability')
     axs[1].legend()
     axs[1].grid(True)
 
-    # Plot PSNR and SSIM
-    # These are typically per epoch, so adjust x-axis if needed
-    axs[2].plot(psnr_scores_np, label='PSNR')
-    axs[2].plot(ssim_scores_np, label='SSIM')
-    axs[2].set_title('PSNR and SSIM over Training')
-    axs[2].set_xlabel('Batch Iterations') # Or 'Epochs' if you average per epoch
-    axs[2].set_ylabel('Metric Value')
+    # Plot PSNR
+    axs[2].plot(epochs, training_results['psnr'], 'c-o', label='PSNR (dB)')
+    axs[2].set_title('Validation PSNR')
+    axs[2].set_xlabel('Epochs')
+    axs[2].set_ylabel('PSNR (dB)')
     axs[2].legend()
     axs[2].grid(True)
 
+    # Plot SSIM
+    axs[3].plot(epochs, training_results['ssim'], 'y-o', label='SSIM')
+    axs[3].set_title('Validation SSIM')
+    axs[3].set_xlabel('Epochs')
+    axs[3].set_ylabel('SSIM')
+    axs[3].legend()
+    axs[3].grid(True)
+
     plt.tight_layout()
+    os.makedirs(os.path.dirname(save_path), exist_ok=True)
     plt.savefig(save_path, dpi=300)
-    plt.close(fig) # Close the figure to free up memory
+    plt.close(fig)
     print(f"Performance plots saved to {save_path}")
