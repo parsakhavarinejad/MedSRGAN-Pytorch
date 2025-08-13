@@ -3,8 +3,8 @@
 # --- Data Configuration ---
 data:
   # Paths to the dataset. The script will combine these.
-  train_path: 'MedSRGAN-Pytorch/data/dataset/train/*.png'
-  test_path: 'MedSRGAN-Pytorch/data/dataset/test/*.png'
+  train_path: 'MedSRGAN-Pytorch/data/dataset/train/*/*.png'
+  test_path: 'MedSRGAN-Pytorch/data/dataset/test/*/*.png'
   image_size: 256
   # Number of worker processes for the DataLoader
   num_workers: 4
@@ -15,17 +15,18 @@ data:
 
 # --- Training Configuration ---
 training:
-  epochs: 400
-  batch_size: 8
+  epochs: 1
+  batch_size: 1
   # Device selection: 'auto' will use CUDA if available, otherwise CPU.
   # Can be manually set to 'cuda' or 'cpu'.
   device: 'auto'
 
 # --- Optimizer Configuration ---
 optimizer:
-  learning_rate: 0.00001 # This is 1e-5
-  # Beta parameters for the Adam optimizer
-  betas: [0.95, 0.999]
+    learning_rate_g: 0.0005
+    learning_rate_d: 0.00005
+    weight_decay: 0.00001
+    betas: [0.9, 0.999]
 
 # --- Early Stopping Configuration ---
 early_stopping:

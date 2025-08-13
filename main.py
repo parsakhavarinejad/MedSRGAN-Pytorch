@@ -20,7 +20,7 @@ from utils.visualize import visualize_epoch_results
 
 def main():
     # --- Load Configuration ---
-    with open('config.yml', 'r') as f:
+    with open('config\config.yml', 'r') as f:
         cfg = yaml.safe_load(f)
 
     # --- Device Configuration ---
@@ -76,8 +76,9 @@ def main():
     psnr_metric = PeakSignalNoiseRatio().to(device)
     ssim_metric = StructuralSimilarityIndexMeasure(data_range=1.0).to(device)
     gen_loss_fn = GeneratorLossFunction(device=device)
-    opt_g = optim.Adam(generator.parameters(), lr=cfg['optimizer']['learning_rate'], betas=tuple(cfg['optimizer']['betas']))
-    opt_d = optim.Adam(discriminator.parameters(), lr=cfg['optimizer']['learning_rate'], betas=tuple(cfg['optimizer']['betas']))
+    betas_as_floats = tuple(map(float, cfg['optimizer']['betas']))
+    opt_g = optim.Adam(generator.parameters(), lr=cfg['optimizer']['learning_rate_g'], betas=betas_as_floats, weight_decay=cfg['optimizer']['weight_decay'])
+    opt_d = optim.Adam(discriminator.parameters(), lr=cfg['optimizer']['learning_rate_d'], betas=betas_as_floats, weight_decay=cfg['optimizer']['weight_decay'])
     print("Initialization complete.")
 
     # --- Trainer Initialization ---
